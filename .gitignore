@@ -49,3 +49,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Documentation files (not ready for GitHub yet)
+DEPLOYMENT.md
+IMPLEMENTATION_SUMMARY.md
+QUICKSTART.md
