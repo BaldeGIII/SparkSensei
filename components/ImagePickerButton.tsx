@@ -67,7 +67,7 @@ export default function ImagePickerButton({
       disabled={disabled}
     >
       <Text style={styles.buttonText}>
-        {type === 'camera' ? '📷 Take Photo' : '🖼️ Choose from Gallery'}
+        {type === 'camera' ? '📷 CAPTURE IMAGE' : '📁 SELECT FILE'}
       </Text>
     </TouchableOpacity>
   );
@@ -75,18 +75,20 @@ export default function ImagePickerButton({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#007AFF',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
+    backgroundColor: '#1F2937',
+    padding: 14,
+    borderRadius: 6,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#374151',
   },
   buttonDisabled: {
-    backgroundColor: '#CCC',
+    opacity: 0.5,
   },
   buttonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: '600',
+    color: '#9CA3AF',
+    fontSize: 12,
+    fontWeight: 'bold',
+    letterSpacing: 1,
   },
 });

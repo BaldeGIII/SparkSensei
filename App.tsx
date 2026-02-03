@@ -1,3 +1,4 @@
+import './global.css';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -26,14 +27,17 @@ export default function App() {
           component={SettingsScreen}
           options={{
             headerShown: true,
-            title: 'Settings',
+            title: 'SYSTEM CONFIGURATION',
             headerStyle: {
-              backgroundColor: '#FFF',
+              backgroundColor: '#0A0A0A',
             },
-            headerTintColor: '#007AFF',
+            headerTintColor: '#3B82F6',
             headerTitleStyle: {
               fontWeight: 'bold',
+              fontSize: 16,
             },
+            headerShadowVisible: false,
+            headerBackTitle: 'BACK',
           }}
         />
       </Stack.Navigator>
