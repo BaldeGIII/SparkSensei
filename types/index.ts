@@ -6,9 +6,9 @@ export enum AIProviderType {
 
 export interface AnalysisResult {
   diagnosis: string;
-  details: string;
+  details: string[];
   fix: string;
-  senseiNote: string;
+  note: string;
   rawResponse?: string;
 }
 
@@ -22,6 +22,7 @@ export interface StorageKeys {
   API_KEY_CLAUDE: string;
   API_KEY_OPENAI: string;
   API_KEY_GEMINI: string;
+  SUBSCRIPTION: string;
 }
 
 export const STORAGE_KEYS: StorageKeys = {
@@ -29,4 +30,5 @@ export const STORAGE_KEYS: StorageKeys = {
   API_KEY_CLAUDE: '@spark_sensei_api_key_claude',
   API_KEY_OPENAI: '@spark_sensei_api_key_openai',
   API_KEY_GEMINI: '@spark_sensei_api_key_gemini',
+  SUBSCRIPTION: '@spark_sensei_subscription',
 };

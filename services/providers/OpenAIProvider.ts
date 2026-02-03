@@ -2,7 +2,6 @@ import OpenAI from 'openai';
 import { AIProvider, SPARK_SENSEI_SYSTEM_PROMPT } from '../AIProvider';
 import { AnalysisResult } from '../../types';
 import { APP_CONFIG } from '../../constants/config';
-import * as FileSystem from 'expo-file-system';
 
 export class OpenAIProvider extends AIProvider {
   private client: OpenAI;
@@ -11,15 +10,14 @@ export class OpenAIProvider extends AIProvider {
     super(apiKey);
     this.client = new OpenAI({
       apiKey: this.apiKey,
+      dangerouslyAllowBrowser: true,
     });
   }
 
   async analyzeImage(imageUri: string): Promise<AnalysisResult> {
     try {
-      // Read image as base64
-      const base64Image = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: 'base64',
-      });
+      // Read image as base64 (works on both web and mobile)
+      const base64Image = await this.readFileAsBase64(imageUri);
 
       // Determine media type from URI
       const mediaType = this.getMediaType(imageUri);
@@ -45,7 +43,7 @@ export class OpenAIProvider extends AIProvider {
               },
               {
                 type: 'text',
-                text: 'Analyze this image according to your protocol.',
+                text: 'Analyze this image according to your protocol, Spark Sensei.',
               },
             ],
           },
@@ -64,9 +62,14 @@ export class OpenAIProvider extends AIProvider {
 
   private getMediaType(uri: string): string {
     const lowerUri = uri.toLowerCase();
-    if (lowerUri.endsWith('.png')) return 'image/png';
-    if (lowerUri.endsWith('.gif')) return 'image/gif';
-    if (lowerUri.endsWith('.webp')) return 'image/webp';
+    if (lowerUri.endsWith('.png') || lowerUri.includes('image/png')) return 'image/png';
+    if (lowerUri.endsWith('.gif') || lowerUri.includes('image/gif')) return 'image/gif';
+    if (lowerUri.endsWith('.webp') || lowerUri.includes('image/webp')) return 'image/webp';
+    // Check data URL mime type
+    if (uri.startsWith('data:image/')) {
+      const match = uri.match(/data:(image\/[^;]+)/);
+      if (match) return match[1];
+    }
     return 'image/jpeg'; // Default to JPEG
   }
 }

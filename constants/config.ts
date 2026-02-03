@@ -6,8 +6,8 @@ export const APP_CONFIG = {
   APP_VERSION: '1.0.0',
 
   // AI Model Settings
-  CLAUDE_MODEL: 'claude-3-5-sonnet-20241022',
-  OPENAI_MODEL: 'gpt-4-vision-preview',
+  CLAUDE_MODEL: 'claude-sonnet-4-5-20250929',
+  OPENAI_MODEL: 'gpt-4o',
   GEMINI_MODEL: 'gemini-1.5-pro',
 
   // API Settings

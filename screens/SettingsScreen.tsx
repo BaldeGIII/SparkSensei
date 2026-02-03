@@ -8,11 +8,25 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AIProviderType } from '../types';
 import { storage } from '../utils/storage';
 
+type RootStackParamList = {
+  Home: undefined;
+  Settings: undefined;
+  Premium: undefined;
+};
+
+type SettingsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Settings'>;
+
 export default function SettingsScreen() {
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
   const [selectedProvider, setSelectedProvider] = useState<AIProviderType | null>(null);
   const [apiKey, setApiKey] = useState('');
   const [loading, setLoading] = useState(true);
@@ -158,8 +172,13 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
+    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+      <KeyboardAvoidingView
+        style={styles.keyboardView}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <ScrollView style={styles.container}>
+          <View style={styles.content}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>SYSTEM CONFIGURATION</Text>
@@ -271,12 +290,21 @@ export default function SettingsScreen() {
             </Text>
           </View>
         )}
-      </View>
-    </ScrollView>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#0A0A0A',
+  },
+  keyboardView: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#0A0A0A',

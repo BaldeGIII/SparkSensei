@@ -4,10 +4,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import PremiumScreen from './screens/PremiumScreen';
 
 export type RootStackParamList = {
   Home: undefined;
   Settings: undefined;
+  Premium: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -32,6 +34,24 @@ export default function App() {
               backgroundColor: '#0A0A0A',
             },
             headerTintColor: '#3B82F6',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 16,
+            },
+            headerShadowVisible: false,
+            headerBackTitle: 'BACK',
+          }}
+        />
+        <Stack.Screen
+          name="Premium"
+          component={PremiumScreen}
+          options={{
+            headerShown: true,
+            title: 'MANAGE SUBSCRIPTION',
+            headerStyle: {
+              backgroundColor: '#0A0A0A',
+            },
+            headerTintColor: '#F59E0B',
             headerTitleStyle: {
               fontWeight: 'bold',
               fontSize: 16,
