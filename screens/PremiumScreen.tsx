@@ -57,7 +57,7 @@ export default function PremiumScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.content}>
         {/* Header */}
         <View style={styles.header}>

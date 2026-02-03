@@ -75,20 +75,20 @@ export default function ImagePickerButton({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#1F2937',
-    padding: 14,
-    borderRadius: 6,
+    backgroundColor: '#1E293B',
+    padding: 16,
+    borderRadius: 8,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#374151',
+    borderColor: '#334155',
   },
   buttonDisabled: {
     opacity: 0.5,
   },
   buttonText: {
-    color: '#9CA3AF',
-    fontSize: 12,
+    color: '#94A3B8',
+    fontSize: 13,
     fontWeight: 'bold',
-    letterSpacing: 1,
+    letterSpacing: 0.8,
   },
 });

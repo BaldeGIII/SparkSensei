@@ -39,7 +39,6 @@ export default function App() {
               fontSize: 16,
             },
             headerShadowVisible: false,
-            headerBackTitle: 'BACK',
           }}
         />
         <Stack.Screen
@@ -57,7 +56,6 @@ export default function App() {
               fontSize: 16,
             },
             headerShadowVisible: false,
-            headerBackTitle: 'BACK',
           }}
         />
       </Stack.Navigator>

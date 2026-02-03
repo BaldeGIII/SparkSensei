@@ -151,8 +151,8 @@ export abstract class AIProvider implements IAIProvider {
         reader.readAsDataURL(blob);
       });
     } else {
-      // Mobile environment - use expo-file-system
-      const FileSystem = require('expo-file-system');
+      // Mobile environment - use expo-file-system legacy API
+      const FileSystem = require('expo-file-system/legacy');
       return await FileSystem.readAsStringAsync(imageUri, {
         encoding: 'base64',
       });

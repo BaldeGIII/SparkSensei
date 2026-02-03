@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Platform,
   KeyboardAvoidingView,
+  Clipboard,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -65,6 +66,19 @@ export default function SettingsScreen() {
       setApiKey(savedKey);
     } else {
       setApiKey('');
+    }
+  };
+
+  const handlePaste = async () => {
+    try {
+      const text = await Clipboard.getString();
+      if (text) {
+        setApiKey(text.trim());
+        setSuccessMessage('API key pasted from clipboard!');
+        setTimeout(() => setSuccessMessage(''), 2000);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to paste from clipboard');
     }
   };
 
@@ -172,10 +186,11 @@ export default function SettingsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+    <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        enabled={Platform.OS === 'ios'}
       >
         <ScrollView style={styles.container}>
           <View style={styles.content}>
@@ -230,19 +245,27 @@ export default function SettingsScreen() {
                 </View>
               </View>
 
-              <TextInput
-                style={styles.apiInput}
-                placeholder={getProviderInfo(selectedProvider).placeholder}
-                placeholderTextColor="#4B5563"
-                value={apiKey}
-                onChangeText={(value) => {
-                  setApiKey(value);
-                  setSuccessMessage('');
-                }}
-                secureTextEntry
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
+              <View style={styles.apiInputContainer}>
+                <TextInput
+                  style={styles.apiInput}
+                  placeholder={getProviderInfo(selectedProvider).placeholder}
+                  placeholderTextColor="#4B5563"
+                  value={apiKey}
+                  onChangeText={(value) => {
+                    setApiKey(value);
+                    setSuccessMessage('');
+                  }}
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                <TouchableOpacity
+                  style={styles.pasteButton}
+                  onPress={handlePaste}
+                >
+                  <Text style={styles.pasteButtonText}>📋 PASTE</Text>
+                </TouchableOpacity>
+              </View>
 
               <View style={styles.apiHint}>
                 <Text style={styles.apiHintText}>
@@ -475,7 +498,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6B7280',
   },
+  apiInputContainer: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
+  },
   apiInput: {
+    flex: 1,
     backgroundColor: '#0A0A0A',
     borderWidth: 1,
     borderColor: '#374151',
@@ -484,7 +513,21 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontFamily: 'monospace',
-    marginBottom: 12,
+  },
+  pasteButton: {
+    backgroundColor: '#3B82F6',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 90,
+  },
+  pasteButtonText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
   apiHint: {
     backgroundColor: '#1F2937',

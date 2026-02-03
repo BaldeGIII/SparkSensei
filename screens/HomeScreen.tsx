@@ -11,8 +11,12 @@ import {
   TextInput,
   Platform,
   KeyboardAvoidingView,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+const { width } = Dimensions.get('window');
+const isTabletOrDesktop = width >= 768;
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ImagePickerButton from '../components/ImagePickerButton';
@@ -76,7 +80,7 @@ export default function HomeScreen() {
       return;
     }
 
-    // Check free tier limit (DISABLED FOR DEVELOPMENT)
+    // Check free tier limit (COMMENTED OUT FOR TESTING)
     // const status = await storage.getSubscriptionStatus();
     // if (status.tier === SubscriptionTier.FREE && status.analysisCount >= 5) {
     //   addDebugLog('❌ ERROR: Free tier limit reached (5/5 analyses today)');
@@ -191,14 +195,9 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-      >
-        {/* Header */}
-        <View style={styles.header}>
+    <SafeAreaView style={styles.safeArea}>
+      {/* Header */}
+      <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.logoContainer}>
             <Text style={styles.logoIcon}>⚡</Text>
@@ -228,7 +227,11 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      <View style={styles.content}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={true}
+      >
         {/* Title */}
         <View style={styles.titleSection}>
           <Text style={styles.mainTitle}>AUDIT SUBMISSION</Text>
@@ -239,9 +242,9 @@ export default function HomeScreen() {
         </View>
 
         {/* Main Content Area */}
-        <View style={styles.mainContent}>
+        <View style={[styles.mainContent, !isTabletOrDesktop && styles.mainContentMobile]}>
           {/* Upload Area */}
-          <View style={styles.uploadSection}>
+          <View style={[styles.uploadSection, !isTabletOrDesktop && styles.uploadSectionMobile]}>
             {!selectedImageUri ? (
               <View style={styles.uploadBox}>
                 <View style={styles.uploadIconContainer}>
@@ -273,7 +276,7 @@ export default function HomeScreen() {
           </View>
 
           {/* Status/Results Area */}
-          <View style={styles.statusSection}>
+          <View style={[styles.statusSection, !isTabletOrDesktop && styles.statusSectionMobile]}>
             {!analyzing && !analysisResult && (
               <View style={styles.idleContainer}>
                 <View style={styles.idleIconContainer}>
@@ -302,10 +305,8 @@ export default function HomeScreen() {
           </View>
         </View>
 
-      </View>
-
-      {/* Laboratory Notes and Button - Fixed at bottom */}
-      <View style={styles.bottomSection}>
+        {/* Laboratory Notes and Button */}
+        <View style={styles.bottomSection}>
         <View style={styles.notesSection}>
           <View style={styles.notesHeader}>
             <View style={styles.notesDot} />
@@ -347,12 +348,6 @@ export default function HomeScreen() {
         )}
       </View>
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <Text style={styles.footerLeft}>© SPARK SENSEI CORE</Text>
-        <Text style={styles.footerRight}>MM ANALYSIS V3.0</Text>
-      </View>
-
       {/* Debug Panel */}
       {debugLogs.length > 0 && (
         <View style={styles.debugPanel}>
@@ -386,7 +381,13 @@ export default function HomeScreen() {
           )}
         </View>
       )}
-      </KeyboardAvoidingView>
+      </ScrollView>
+
+      {/* Footer */}
+      <View style={styles.footer}>
+        <Text style={styles.footerLeft}>© SPARK SENSEI CORE</Text>
+        <Text style={styles.footerRight}>MM ANALYSIS V3.0</Text>
+      </View>
     </SafeAreaView>
   );
 }
@@ -482,9 +483,12 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     letterSpacing: 1,
   },
-  content: {
+  scrollView: {
     flex: 1,
+  },
+  scrollContent: {
     paddingHorizontal: 24,
+    paddingBottom: 20,
   },
   titleSection: {
     paddingTop: 16,
@@ -506,14 +510,21 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   mainContent: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 20,
+    marginBottom: 20,
+  },
+  mainContentMobile: {
+    flexDirection: 'column',
     gap: 20,
   },
   uploadSection: {
     flex: 1,
-    minHeight: 0,
+  },
+  uploadSectionMobile: {
+    flex: 0,
+    minHeight: 350,
   },
   uploadBox: {
     flex: 1,
@@ -521,9 +532,9 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderColor: '#374151',
     borderRadius: 12,
-    padding: 24,
+    padding: 32,
     alignItems: 'center',
-    backgroundColor: '#111111',
+    backgroundColor: '#0F1419',
     justifyContent: 'center',
   },
   uploadIconContainer: {
@@ -533,23 +544,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#1F2937',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   uploadIcon: {
-    fontSize: 40,
+    fontSize: 36,
   },
   uploadTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginBottom: 8,
-    letterSpacing: 1,
+    marginBottom: 6,
+    letterSpacing: 0.5,
+    textAlign: 'center',
   },
   uploadHint: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#6B7280',
-    marginBottom: 24,
+    marginBottom: 20,
     letterSpacing: 0.5,
+    textAlign: 'center',
   },
   uploadButtons: {
     width: '100%',
@@ -582,7 +595,10 @@ const styles = StyleSheet.create({
   },
   statusSection: {
     flex: 1,
-    minHeight: 0,
+  },
+  statusSectionMobile: {
+    flex: 0,
+    minHeight: 250,
   },
   idleContainer: {
     flex: 1,
@@ -601,23 +617,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#1F2937',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   idleIcon: {
-    fontSize: 40,
+    fontSize: 36,
   },
   idleTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginBottom: 12,
+    marginBottom: 10,
     letterSpacing: 1,
+    textAlign: 'center',
   },
   idleText: {
     fontSize: 12,
     color: '#6B7280',
     textAlign: 'center',
     lineHeight: 18,
+    paddingHorizontal: 20,
   },
   analyzingContainer: {
     flex: 1,
@@ -650,53 +668,50 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   bottomSection: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#1F2937',
+    marginTop: 20,
+    marginBottom: 20,
   },
   notesSection: {
-    marginBottom: 12,
+    marginBottom: 16,
   },
   notesHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   notesDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
     backgroundColor: '#3B82F6',
     marginRight: 8,
   },
   notesLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 'bold',
     color: '#9CA3AF',
-    letterSpacing: 1,
+    letterSpacing: 1.5,
   },
   notesInput: {
-    backgroundColor: '#111111',
+    backgroundColor: '#0F1419',
     borderWidth: 1,
-    borderColor: '#374151',
+    borderColor: '#2D3748',
     borderRadius: 8,
-    padding: 12,
+    padding: 14,
     color: '#FFFFFF',
-    fontSize: 12,
-    minHeight: 60,
+    fontSize: 13,
+    minHeight: 70,
     textAlignVertical: 'top',
   },
   analyzeButton: {
-    backgroundColor: '#1F2937',
+    backgroundColor: '#3B82F6',
     borderRadius: 8,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: '#374151',
+    padding: 16,
+    borderWidth: 0,
   },
   analyzeButtonDisabled: {
     opacity: 0.5,
+    backgroundColor: '#1F2937',
   },
   analyzeButtonContent: {
     flexDirection: 'row',
@@ -707,32 +722,32 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#6B7280',
+    backgroundColor: '#FFFFFF',
     marginRight: 12,
   },
   analyzeButtonText: {
-    color: '#9CA3AF',
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: 'bold',
-    letterSpacing: 2,
+    letterSpacing: 1.5,
   },
   usageIndicator: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 12,
-    padding: 12,
-    backgroundColor: '#1F2937',
+    marginTop: 16,
+    padding: 14,
+    backgroundColor: '#0F1419',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#374151',
+    borderColor: '#2D3748',
   },
   usageText: {
-    fontSize: 12,
-    color: '#9CA3AF',
+    fontSize: 13,
+    color: '#94A3B8',
   },
   upgradeLink: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#F59E0B',
     fontWeight: 'bold',
   },
