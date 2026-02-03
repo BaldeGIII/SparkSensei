@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "SparkSensei",
+    "name": "Spark Sensei",
     "slug": "SparkSensei",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -25,6 +25,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app needs access to your photos to analyze electronics and code images.",
+          "cameraPermission": "The app needs access to your camera to capture electronics and code images."
+        }
+      ]
+    ]
   }
 }
